@@ -1,0 +1,59 @@
+
+
+
+{{ if false}}aaaaa {{end}}
+
+
+---
+
+small git pattern I tend to use often
+
+- develop feature, and perform refactorings and improvements as part of it
+- be happy with the final result, but the diff ends up huge and difficult to read
+- (assuming working on branch "featurebranch")
+- `git branch featurebranch-bak1` # always nice to have a backup
+- `git reset main`
+- loop until done: 
+  - `git add --patch` (or select patches using `tig`)
+  - commit logical chunk
+
+
+or
+
+- `git branch featurebranch-bak1` # this will be used shortly
+- `git reset --hard main` # discard all changes
+- redo the refactoring step, usually quickly using IDE refactoring tools
+- commit
+- `git reset featurebranch-bak1` # now we have the final state, but uncommited
+- if the final diff for the feature looks good, commit and you're done
+- if not, `git reset --hard` and loop until done
+
+
+This makes my reviewers' lives as easy as possible, respecting their time. It speeds up the review process, and allow the reviewers to focus on actually important things, making them more likely to spot important improvement suggestsion
+
+
+<!--
+---------
+
+a good wisdom (by what source?) is "when designing an api, always start with writing an example client using the api". 
+
+i take a similar approach to making pull requests, by considering the reviewers perspective first. 
+
+sometimes, when the feature is straightforward, this is doable already before starting the implementation, and it's possible to already then decide how many commits and prs to use for the feature. 
+
+but often, i need more exploratory development, and realize the extent of the feature after it's mostly complete. 
+
+let's take the scenario that I've ended up:
+- extracted a few pieces of code into their own methods
+- done some small cleanup or renaming, to improve the general health of the codebase
+
+at this stage, i like to use this process to convert chronological commits to semantic ones: 
+
+- `git branch somebackupbranch` always nice to have a backup handy
+- `git rebase -i HEAD~10` squash the 
+
+
+
+What I end up with is: 
+ 
+-->

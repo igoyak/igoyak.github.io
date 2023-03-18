@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on Gustav Larsson</title>
+    <link>/posts/</link>
+    <description>Recent content in Posts on Gustav Larsson</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 27 Sep 2023 12:00:00 +0300</lastBuildDate><atom:link href="/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Retroactive git splitting pattern</title>
+      <link>/posts/retroactive-git-splitting/</link>
+      <pubDate>Wed, 27 Sep 2023 12:00:00 +0300</pubDate>
+      
+      <guid>/posts/retroactive-git-splitting/</guid>
+      <description>&lt;p&gt;I&amp;rsquo;ve found that I use this little git-pattern quite often.&lt;/p&gt;</description>
+    </item>
+    
+  </channel>
+</rss>
