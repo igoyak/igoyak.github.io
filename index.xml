@@ -4,17 +4,23 @@
     <title>Gustav Larsson</title>
     <link>/</link>
     <description>Recent content on Gustav Larsson</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 27 Sep 2023 12:00:00 +0300</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 06 May 2025 00:00:00 +0300</lastBuildDate>
+    <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Paper Comeback?</title>
+      <link>/posts/paper-comeback/</link>
+      <pubDate>Tue, 06 May 2025 00:00:00 +0300</pubDate>
+      <guid>/posts/paper-comeback/</guid>
+      <description>&lt;p&gt;Small prediction.&lt;/p&gt;&#xA;&lt;p&gt;I&amp;rsquo;m suspecting pen and paper as a medium will make a comeback.&lt;/p&gt;&#xA;&lt;p&gt;Improving image support in llms lowers the threshold of digitizing and should, in theory, allow understanding of structure, layout and non-text.&lt;/p&gt;&#xA;&lt;p&gt;I enjoy pen and paper as an input medium, but have tried to avoid it since it in my case mostly becomes write-only in practice.&#xA;But maybe no longer.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Retroactive git splitting pattern</title>
       <link>/posts/retroactive-git-splitting/</link>
       <pubDate>Wed, 27 Sep 2023 12:00:00 +0300</pubDate>
-      
       <guid>/posts/retroactive-git-splitting/</guid>
       <description>&lt;p&gt;I&amp;rsquo;ve found that I use this little git-pattern quite often.&lt;/p&gt;</description>
     </item>
-    
   </channel>
 </rss>

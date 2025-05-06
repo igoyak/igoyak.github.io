@@ -3,10 +3,13 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
     <loc>/</loc>
-    <lastmod>2023-09-27T12:00:00+03:00</lastmod>
+    <lastmod>2025-05-06T00:00:00+03:00</lastmod>
+  </url><url>
+    <loc>/posts/paper-comeback/</loc>
+    <lastmod>2025-05-06T00:00:00+03:00</lastmod>
   </url><url>
     <loc>/posts/</loc>
-    <lastmod>2023-09-27T12:00:00+03:00</lastmod>
+    <lastmod>2025-05-06T00:00:00+03:00</lastmod>
   </url><url>
     <loc>/posts/retroactive-git-splitting/</loc>
     <lastmod>2023-09-27T12:00:00+03:00</lastmod>
