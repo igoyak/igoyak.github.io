@@ -105,7 +105,7 @@
     
     
 
-<link type="text/css" rel="stylesheet" href="/css/bundle.min.505fbb6b178b720c77676ce4ec2baf94cb2df29c873be94e8ee69edb87929e5a.css">
+<link type="text/css" rel="stylesheet" href="/css/bundle.min.878ffdb345b0583c5653abf66ff22850b3daccc6db10e1450cac537e5ffc015d.css">
 
 
     
@@ -190,6 +190,10 @@
                         <li class="sub-heading">
                             
                         </li>
+                        
+                            <li class="bullet">
+                                <a href="/posts/llm-discussion/">How LLM discussions sound to me (in 2025-06-xx)</a>
+                            </li>
                         
                             <li class="bullet">
                                 <a href="/posts/paper-comeback/">Paper Comeback?</a>
@@ -290,7 +294,7 @@
 
 <p><strong>Situation</strong>:</p>
 <ul>
-<li>I&rsquo;ve developed a feature, having made one commit (or multiple chronological ones)</li>
+<li>I&rsquo;ve developed a feature, having made one commit</li>
 <li>The final result is good, but the diff is large and difficult to read</li>
 </ul>
 <p>This is usually the case when some refactoring was needed, for example inlining/extracting, nesting/un-nesting etc.</p>
@@ -299,10 +303,10 @@
 <li><code>git branch feature-backup</code> Back up the current branch with the final state</li>
 <li><code>git reset --hard master</code> Restore current branch to master</li>
 <li>Redo only the refactoring. <code>git commit</code>, with a message making it clear no business logic has changed</li>
-<li><code>git reset feature-backup</code> Restore the working directory to the wanted final state again</li>
+<li><code>git checkout feature-backup -- .</code> Restore the working directory to the wanted final state again</li>
 <li><code>git commit</code> with the actual feature</li>
 </ul>
-<p>This allows me to create easy-to-review pull requests, improving the lives of my reviewers, even though the development process wasn&rsquo;t this linear.</p>
+<p>This allows me to create easy-to-review pull requests, improving the lives of my reviewers when the development process isn&rsquo;t linear.</p>
   
   <hr>
 <div class="footer">

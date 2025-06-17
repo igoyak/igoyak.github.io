@@ -6,8 +6,15 @@
     <description>Recent content in Posts on Gustav Larsson</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 06 May 2025 00:00:00 +0300</lastBuildDate>
+    <lastBuildDate>Mon, 09 Jun 2025 00:00:00 +0300</lastBuildDate>
     <atom:link href="/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>How LLM discussions sound to me (in 2025-06-xx)</title>
+      <link>/posts/llm-discussion/</link>
+      <pubDate>Mon, 09 Jun 2025 00:00:00 +0300</pubDate>
+      <guid>/posts/llm-discussion/</guid>
+      <description>&lt;div style=&#34;display: flex; flex-flow: row wrap; border: 0px solid grey&#34;&gt;&#xA;&lt;figure style=&#34;margin: 5px; margin-top: auto;&#34;&gt;&#xA;&lt;a href=&#34;/posts/llm-discussion/images/llm-discussion.jpg&#34;&gt;&lt;img style=&#34;width: 100%&#34;src=&#34;/posts/llm-discussion/images/llm-discussion.jpg&#34;&gt;&lt;/a&gt;&#xA;&lt;figcaption&gt;&#xA;  &lt;h4 style=&#39;text-align: center&#39;&gt;How LLM discussions sound to me&lt;/h4&gt;&#xA;&lt;/figcaption&gt;&lt;/figure&gt;&#xA;&lt;/div&gt;</description>
+    </item>
     <item>
       <title>Paper Comeback?</title>
       <link>/posts/paper-comeback/</link>
