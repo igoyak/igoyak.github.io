@@ -6,8 +6,15 @@
     <description>Recent content in Posts on Gustav Larsson</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 09 Jun 2025 00:00:00 +0300</lastBuildDate>
+    <lastBuildDate>Sat, 24 Jan 2026 12:00:00 +0300</lastBuildDate>
     <atom:link href="/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Using mutation testing to improve trust in LLM-assisted development</title>
+      <link>/posts/mutation-testing-llm-development/</link>
+      <pubDate>Sat, 24 Jan 2026 12:00:00 +0300</pubDate>
+      <guid>/posts/mutation-testing-llm-development/</guid>
+      <description>&lt;p&gt;I believe mutation testing will make a comeback due to LLMs.&lt;/p&gt;&#xA;&lt;hr&gt;&#xA;&lt;p&gt;Let&amp;rsquo;s say that you have code that needs refactoring, and that you are tempted to use LLMs.&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;You don&amp;rsquo;t trust the LLM to not change behavior, so you need good test coverage before the refactor&lt;/li&gt;&#xA;&lt;li&gt;You could generate tests, but you don&amp;rsquo;t trust the LLM to write proper tests&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;Test coverage is (arguably) more important when the refactor is made by an LLM, since humans are (arguably) less likely&#xA;to make silly, arbitrary changes to business logic.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>How LLM discussions sound to me (in 2025-06-xx)</title>
       <link>/posts/llm-discussion/</link>
