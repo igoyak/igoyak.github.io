@@ -1,66 +1,15 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<html lang="en-us" dir="ltr">
 <head>
-    
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>Using mutation testing to improve trust in LLM-assisted development | Gustav Larsson</title>
 
 
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
-
-
-<script defer language="javascript" type="text/javascript" src="/js/bundle.min.145453261a7755f5042a854c4213501d215a8fbe34c08d181c40f803f1315e74.js"></script>
-
-
-
-
-
-
-    
-    <meta http-equiv="content-type" content="text/html; charset=utf-8">
-
-    
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    
-    <link rel="icon" href=/favicon.png>
-
-    
-    
-
-
-
-
-
-  
-
-
-
-
-
-  
-  
-  
-
-
-<!-- Open Graph image and Twitter Card metadata -->
-
-<title itemprop="name">Gustav Larsson - Using mutation testing to improve trust in LLM-assisted development</title>
-<meta property="og:title" content=Gustav&#32;Larsson&#32;-&#32;Using&#32;mutation&#32;testing&#32;to&#32;improve&#32;trust&#32;in&#32;LLM-assisted&#32;development />
-<meta name="twitter:title" content=Gustav&#32;Larsson&#32;-&#32;Using&#32;mutation&#32;testing&#32;to&#32;improve&#32;trust&#32;in&#32;LLM-assisted&#32;development />
-<meta itemprop="name" content=Gustav&#32;Larsson&#32;-&#32;Using&#32;mutation&#32;testing&#32;to&#32;improve&#32;trust&#32;in&#32;LLM-assisted&#32;development />
-<meta name="application-name" content=Gustav&#32;Larsson&#32;-&#32;Using&#32;mutation&#32;testing&#32;to&#32;improve&#32;trust&#32;in&#32;LLM-assisted&#32;development />
+<meta property="og:title" content=ZgotmplZ />
+<meta name="twitter:title" content=ZgotmplZ />
+<meta itemprop="name" content=ZgotmplZ />
+<meta name="application-name" content=ZgotmplZ />
 <meta property="og:site_name" content="Gustav Larsson" />
 
 
@@ -86,10 +35,6 @@
 <meta name="googlebot" content="index,follow" />
 
 
-
-<meta property="fb:admins" content="" />
-
-
 <meta name="apple-mobile-web-app-title" content="Gustav Larsson" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="black" />
@@ -99,189 +44,48 @@
 
 
 
-<meta name="generator" content="Hugo 0.140.1">
+      <link rel="stylesheet" href="/css/main.min.57c172886885b0d24ebac97575c9a7be993d0e5d8d798dfaa1c5d3d63f954dca.css" integrity="sha256-V8FyiGiFsNJOusl1dcmnvpk9Dl2NeY36ocXT1j&#43;VTco=" crossorigin="anonymous">
 
 
-    
-    
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
-<link type="text/css" rel="stylesheet" href="/css/bundle.min.8a54d7aec9f7d8f84349dc706d5a2d06feda3b88ee1ac2111c4c241c88969839.css">
 
+        <script src="/js/main.f2979a93a325fecf9605263bd141398a311c8e23388ed7dcff74f92f7e632866.js" integrity="sha256-8peak6Ml/s&#43;WBSY70UE5ijEcjiM4jtfc/3T5L35jKGY=" crossorigin="anonymous"></script>
 
-    
-    <style>
-    body {
-        --sidebar-bg-color: #303030;
-        --sidebar-img-border-color: #515151;
-        --sidebar-p-color: #909090;
-        --sidebar-h1-color: #FFF;
-        --sidebar-a-color: #FFF;
-        --sidebar-socials-color: #FFF;
-        --text-color: #222;
-        --bkg-color: #FAF9F6;
-        --post-title-color: #303030;
-        --list-color: #5a5a5a;
-        --link-color: #268bd2;
-        --date-color: #515151;
-        --table-border-color: #E5E5E5;
-        --table-stripe-color: #F9F9F9;
-        --code-color: #000;
-        --code-background-color: #E5E5E5;
-        --code-block-color: #fff;
-        --code-block-background-color: #272822;
-        --moon-sun-color: #FFF;
-        --moon-sun-background-color: #515151;
-    }
-    body.dark-theme {
-        --text-color: #eee;
-        --bkg-color: #121212;
-        --post-title-color: #DBE2E9;
-        --list-color: #9d9d9d;
-        --link-color: #268bd2;
-        --date-color: #9a9a9a;
-        --table-border-color: #515151;
-        --table-stripe-color: #202020;
-        --code-color: #fff;
-        --code-background-color: #515151;
-        --code-block-color: #fff;
-        --code-block-background-color: #272822;
-    }
-    body {
-        background-color: var(--bkg-color);
-    }
-</style>
 
 </head>
+<body>
+  <header>
+    <h1>
+    <a href="/">
+    Gustav Larsson
+    </a>
+</h1>
 
-    <body class="">
-        <div class="wrapper">
-            <aside class="sidebar">
-    <div class="container sidebar-sticky">
-        <div class="sidebar-about">
-    <h1 class="brand">
-        
-        
-            <a href="/">
-                <h1>Gustav Larsson</h1>
-            </a>
-        
-    </h1>
-    <p class="lead">
-    Software engineering professional and enthusiast
-    </p>
-</div>
-
-        <nav>
-    <ul class="sidebar-nav">
-
-        
-        
-        
-        
-            
-
-            
-                
-                
-                    <li class="heading">
-                        <a href="/posts/">Posts</a>
-                    </li>
-                    
-                        <li class="sub-heading">
-                            
-                        </li>
-                        
-                            <li class="bullet">
-                                <a href="/posts/mutation-testing-llm-development/">Using mutation testing to improve trust in LLM-assisted development</a>
-                            </li>
-                        
-                            <li class="bullet">
-                                <a href="/posts/llm-discussion/">How LLM discussions sound to me (in 2025-06-xx)</a>
-                            </li>
-                        
-                            <li class="bullet">
-                                <a href="/posts/paper-comeback/">Paper Comeback?</a>
-                            </li>
-                        
-                            <li class="bullet">
-                                <a href="/posts/retroactive-git-splitting/">Retroactive git splitting pattern</a>
-                            </li>
-                        
-                    
-                
-            
-            
-                
-                
-            
-                
-                
-            
-        
-
+  <nav>
+    <ul>
+    <li>
+      <a href="/">Home</a>
+    </li>
+    <li>
+      <a aria-current="true" class="ancestor" href="/posts/">Posts</a>
+    </li>
     </ul>
-</nav>
-
-        
-    <a target="_blank" class="social" title="GitHub" href="https://github.com/igoyak">
-        <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="-2 -2 24 24">
-            <path fill="currentColor" d="M18.88 1.099C18.147.366 17.265 0 16.233 0H3.746C2.714 0 1.832.366 1.099 1.099C.366 1.832 0 2.714 0 3.746v12.487c0 1.032.366 1.914 1.099 2.647c.733.733 1.615 1.099 2.647 1.099H6.66c.19 0 .333-.007.429-.02a.504.504 0 0 0 .286-.169c.095-.1.143-.245.143-.435l-.007-.885c-.004-.564-.006-1.01-.006-1.34l-.3.052c-.19.035-.43.05-.721.046a5.555 5.555 0 0 1-.904-.091a2.026 2.026 0 0 1-.872-.39a1.651 1.651 0 0 1-.572-.8l-.13-.3a3.25 3.25 0 0 0-.41-.663c-.186-.243-.375-.407-.566-.494l-.09-.065a.956.956 0 0 1-.17-.156a.723.723 0 0 1-.117-.182c-.026-.061-.004-.111.065-.15c.07-.04.195-.059.378-.059l.26.04c.173.034.388.138.643.311a2.1 2.1 0 0 1 .631.677c.2.355.44.626.722.813c.282.186.566.28.852.28c.286 0 .533-.022.742-.065a2.59 2.59 0 0 0 .585-.196c.078-.58.29-1.028.637-1.34a8.907 8.907 0 0 1-1.333-.234a5.314 5.314 0 0 1-1.223-.507a3.5 3.5 0 0 1-1.047-.872c-.277-.347-.505-.802-.683-1.365c-.177-.564-.266-1.215-.266-1.952c0-1.049.342-1.942 1.027-2.68c-.32-.788-.29-1.673.091-2.652c.252-.079.625-.02 1.119.175c.494.195.856.362 1.086.5c.23.14.414.257.553.352a9.233 9.233 0 0 1 2.497-.338c.859 0 1.691.113 2.498.338l.494-.312a6.997 6.997 0 0 1 1.197-.572c.46-.174.81-.221 1.054-.143c.39.98.424 1.864.103 2.653c.685.737 1.028 1.63 1.028 2.68c0 .737-.089 1.39-.267 1.957c-.177.568-.407 1.023-.689 1.366a3.65 3.65 0 0 1-1.053.865c-.42.234-.828.403-1.223.507a8.9 8.9 0 0 1-1.333.235c.45.39.676 1.005.676 1.846v3.11c0 .147.021.266.065.357a.36.36 0 0 0 .208.189c.096.034.18.056.254.064c.074.01.18.013.318.013h2.914c1.032 0 1.914-.366 2.647-1.099c.732-.732 1.099-1.615 1.099-2.647V3.746c0-1.032-.367-1.914-1.1-2.647z"/>
-        </svg>
-    </a>
+  </nav>
 
 
-
-    <a target="_blank" class="social" title="LinkedIn" href="https://fi.linkedin.com/in/gustav-larsson">
-        <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1.2em" viewBox="0 0 448 512">
-            <path fill="currentColor" d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5c0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7c-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5c67.2 0 79.7 44.3 79.7 101.9V416z"/>
-        </svg>
-    </a>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <p class="footnote">
-    &copy; 2026 Gustav Larsson. All rights reserved.
-</p>
-
-  </div>
-</aside>
-
-            <main class="content container">
-                <div class="post">
-  <div class="info">
-    <h3 class="post-title">
-        <a href="/posts/mutation-testing-llm-development/">Using mutation testing to improve trust in LLM-assisted development</a>
-    </h3>
+  </header>
+  <main>
     
-        <time datetime="2026-01-24T12:00:00&#43;0300" class="post-date">
-            January 24, 2026
-        </time>
-    
-    
-    
-    
-    
-    
-    
-</div>
+  <h1>Using mutation testing to improve trust in LLM-assisted development</h1>
 
-  <p>I believe mutation testing will make a comeback due to LLMs.</p>
+  
+  
+  <time datetime="2026-01-24T12:00:00&#43;03:00">January 24, 2026</time>
+
+  <p>I believe mutation testing will grow in popularity due to LLMs.</p>
 <hr>
 <p>Let&rsquo;s say that you have code that needs refactoring, and that you are tempted to use LLMs.</p>
 <ul>
@@ -290,13 +94,17 @@
 </ul>
 <p>Test coverage is (arguably) more important when the refactor is made by an LLM, since humans are (arguably) less likely
 to make silly, arbitrary changes to business logic.</p>
-<h2 id="mutation-testing">Mutation testing</h2>
-<p><a href="https://en.wikipedia.org/wiki/Mutation_testing" target="_blank">Wikipedia:</a></p>
+<h2 id="mutation-testing">
+  <a class="heading-anchor" href="#mutation-testing">
+    Mutation testing
+  </a>
+</h2>
+<p><a href="https://en.wikipedia.org/wiki/Mutation_testing">Wikipedia:</a></p>
 <blockquote>
 <p>Mutation testing &hellip; is used to design new software tests and evaluate the quality of existing software tests.<br>
 Mutation testing involves making small changes to the program being tested.</p>
 </blockquote>
-<p>i.e. &ldquo;if a change introduces a subtle but catastrophic bug, will the tests catch it?&rdquo;</p>
+<p>i.e. testing the tests: &ldquo;If a change introduces a subtle but catastrophic bug, will the tests catch it?&rdquo;</p>
 <p>So the full refactor flow would be:</p>
 <ol>
 <li>Write tests</li>
@@ -385,20 +193,25 @@ Mutation testing involves making small changes to the program being tested.</p>
     </svg>
   
 </div>
-<h2 id="the-semi-automated-way">The semi-automated way</h2>
-<p>Using <a href="https://mutants.rs/" target="_blank">cargo-mutants</a>, we <a href="https://mutants.rs/installation.html" target="_blank">install</a> it with <code>cargo install --locked cargo-mutants</code>.</p>
-<p>Let&rsquo;s walk through the classic <a href="https://github.com/emilybache/GildedRose-Refactoring-Kata" target="_blank">Gilded Rose kata</a>.</p>
-<pre tabindex="0"><code>$ git clone git@github.com:emilybache/GildedRose-Refactoring-Kata.git
-$ cd GildedRose-Refactoring-Kata/rust/
-</code></pre><p>Low-effort prompting (Cursor CLI + Claude 4.5 Sonnet in this example):</p>
-<pre tabindex="0"><code>$ cursor-agent -p &#34;write tests&#34;
-</code></pre><p>This produces reasonable tests, for example:</p>
+<h2 id="the-semi-automated-way">
+  <a class="heading-anchor" href="#the-semi-automated-way">
+    The semi-automated way
+  </a>
+</h2>
+<p>Using <a href="https://mutants.rs/">cargo-mutants</a>, we <a href="https://mutants.rs/installation.html">install</a> it with <code>cargo install --locked cargo-mutants</code>.</p>
+<p>As a refactoring exercise, let&rsquo;s walk through the classic <a href="https://github.com/emilybache/GildedRose-Refactoring-Kata">Gilded Rose kata</a>.
+The premise is that we have correct code, but want to safely refactor it.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ git clone git@github.com:emilybache/GildedRose-Refactoring-Kata.git
+</span></span><span style="display:flex;"><span>$ cd GildedRose-Refactoring-Kata/rust/
+</span></span></code></pre></div><p>Low-effort prompting (Cursor CLI + Claude 4.5 Sonnet in this example):</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ cursor-agent -p <span style="color:#e6db74">&#34;write tests&#34;</span>
+</span></span></code></pre></div><p>This produces reasonable tests, for example:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-diff" data-lang="diff"><span style="display:flex;"><span>diff --git a/rust/src/gildedrose.rs b/rust/src/gildedrose.rs
 </span></span><span style="display:flex;"><span>index c2ecea0..4ebc8ce 100644
 </span></span><span style="display:flex;"><span><span style="color:#f92672">--- a/rust/src/gildedrose.rs
-</span></span></span><span style="display:flex;"><span><span style="color:#f92672"></span><span style="color:#a6e22e">+++ b/rust/src/gildedrose.rs
-</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span><span style="color:#75715e">@@ -86,4 +86,183 @@ impl GildedRose {
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+++ b/rust/src/gildedrose.rs
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">@@ -86,4 +86,183 @@ impl GildedRose {
+</span></span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span> #[cfg(test)]
 </span></span><span style="display:flex;"><span> mod tests {
 </span></span><span style="display:flex;"><span><span style="color:#a6e22e">+    use super::{GildedRose, Item};
@@ -414,18 +227,18 @@ $ cd GildedRose-Refactoring-Kata/rust/
 </span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+    }
 </span></span></span></code></pre></div><p>Seems fine, and it would probably pass a light human review.</p>
 <p>But mutation testing reveals untested code paths:</p>
-<pre tabindex="0"><code>$ cargo mutants
-Found 55 mutants to test
-...
-MISSED   src/main.rs:6:5: replace main with ()
-MISSED   src/gildedrose.rs:20:9: replace &lt;impl Display for Item&gt; with Ok(Default::default())
-MISSED   src/gildedrose.rs:47:50: replace &lt; with &lt;= in update_quality
-MISSED   src/gildedrose.rs:53:50: replace &lt; with &lt;= in update_quality
-MISSED   src/gildedrose.rs:66:38: replace &lt; with &lt;= in update_quality
-MISSED   src/gildedrose.rs:69:50: replace &gt; with &gt;= in update_quality
-MISSED   src/gildedrose.rs:78:46: replace &lt; with &lt;= in update_quality
-55 mutants tested in 8s: 7 missed, 48 caught
-</code></pre><p>Some missed mutants might not be worth testing:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-rust" data-lang="rust"><span style="display:flex;"><span><span style="color:#75715e">$</span> cargo mutants
+</span></span><span style="display:flex;"><span>Found <span style="color:#ae81ff">55</span> mutants to test
+</span></span><span style="display:flex;"><span><span style="color:#f92672">..</span>.
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">MISSED</span>   src<span style="color:#f92672">/</span>main.rs:<span style="color:#ae81ff">6</span>:<span style="color:#ae81ff">5</span>: <span style="color:#a6e22e">replace</span> main with ()
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">MISSED</span>   src<span style="color:#f92672">/</span>gildedrose.rs:<span style="color:#ae81ff">20</span>:<span style="color:#ae81ff">9</span>: <span style="color:#a6e22e">replace</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">impl</span> Display <span style="color:#66d9ef">for</span> Item<span style="color:#f92672">&gt;</span> with Ok(Default::default())
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">MISSED</span>   src<span style="color:#f92672">/</span>gildedrose.rs:<span style="color:#ae81ff">47</span>:<span style="color:#ae81ff">50</span>: <span style="color:#a6e22e">replace</span> <span style="color:#f92672">&lt;</span> with <span style="color:#f92672">&lt;=</span> <span style="color:#66d9ef">in</span> update_quality
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">MISSED</span>   src<span style="color:#f92672">/</span>gildedrose.rs:<span style="color:#ae81ff">53</span>:<span style="color:#ae81ff">50</span>: <span style="color:#a6e22e">replace</span> <span style="color:#f92672">&lt;</span> with <span style="color:#f92672">&lt;=</span> <span style="color:#66d9ef">in</span> update_quality
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">MISSED</span>   src<span style="color:#f92672">/</span>gildedrose.rs:<span style="color:#ae81ff">66</span>:<span style="color:#ae81ff">38</span>: <span style="color:#a6e22e">replace</span> <span style="color:#f92672">&lt;</span> with <span style="color:#f92672">&lt;=</span> <span style="color:#66d9ef">in</span> update_quality
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">MISSED</span>   src<span style="color:#f92672">/</span>gildedrose.rs:<span style="color:#ae81ff">69</span>:<span style="color:#ae81ff">50</span>: <span style="color:#a6e22e">replace</span> <span style="color:#f92672">&gt;</span> with <span style="color:#f92672">&gt;=</span> <span style="color:#66d9ef">in</span> update_quality
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">MISSED</span>   src<span style="color:#f92672">/</span>gildedrose.rs:<span style="color:#ae81ff">78</span>:<span style="color:#ae81ff">46</span>: <span style="color:#a6e22e">replace</span> <span style="color:#f92672">&lt;</span> with <span style="color:#f92672">&lt;=</span> <span style="color:#66d9ef">in</span> update_quality
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">55</span> mutants tested <span style="color:#66d9ef">in</span> <span style="color:#ae81ff">8</span>s: <span style="color:#ae81ff">7</span> missed, <span style="color:#ae81ff">48</span> caught
+</span></span></code></pre></div><p>Some missed mutants might not be worth testing:</p>
 <ul>
 <li>Replacing main with a no-op</li>
 <li>Messing with the display formatting</li>
@@ -445,9 +258,9 @@ MISSED   src/gildedrose.rs:78:46: replace &lt; with &lt;= in update_quality
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-diff" data-lang="diff"><span style="display:flex;"><span>diff --git a/rust/src/gildedrose.rs b/rust/src/gildedrose.rs
 </span></span><span style="display:flex;"><span>index 4ebc8ce..5b670f9 100644
 </span></span><span style="display:flex;"><span><span style="color:#f92672">--- a/rust/src/gildedrose.rs
-</span></span></span><span style="display:flex;"><span><span style="color:#f92672"></span><span style="color:#a6e22e">+++ b/rust/src/gildedrose.rs
-</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span><span style="color:#75715e">@@ -265,4 +265,119 @@ mod tests {
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>         // Current implementation treats it as a normal item
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+++ b/rust/src/gildedrose.rs
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">@@ -265,4 +265,119 @@ mod tests {
+</span></span></span><span style="display:flex;"><span>         // Current implementation treats it as a normal item
 </span></span><span style="display:flex;"><span>         make
 </span></span><span style="display:flex;"><span>     }
 </span></span><span style="display:flex;"><span><span style="color:#a6e22e">+
@@ -488,32 +301,40 @@ MISSED   src/gildedrose.rs:78:46: replace &lt; with &lt;= in update_quality
 </ul>
 </div>
 
-<h2 id="fully-automated">Fully automated?</h2>
+<h2 id="fully-automated">
+  <a class="heading-anchor" href="#fully-automated">
+    Fully automated?
+  </a>
+</h2>
 <p>Let&rsquo;s reset the state and try again with a minimal <code>AGENTS.md</code></p>
-<pre tabindex="0"><code>Tests are run with `cargo test`
-
-Mutation tests are run with `cargo mutants`. Mutation tests must pass. 
-For each MISSED mutation, either add a test case or annotate the function with `#[mutants::skip]` if testing is not appropriate. 
-</code></pre><p>Rerunning the same prompt <code>cursor-agent -p &quot;write tests&quot;</code> makes the agent execute the mutation tests and iterate until all mutants are caught:</p>
-<pre tabindex="0"><code>$ cargo mutants
-Found 54 mutants to test
-ok       Unmutated baseline in 0s build + 0s test
- INFO Auto-set test timeout to 20s
-54 mutants tested in 9s: 54 caught
-</code></pre><p>It also added a skip annotation as instructed</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-plain" data-lang="plain"><span style="display:flex;"><span>Tests are run with `cargo test`
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Mutation tests are run with `cargo mutants`. Mutation tests must pass. 
+</span></span><span style="display:flex;"><span>For each MISSED mutation, either add a test case or annotate the function with `#[mutants::skip]` if testing is not appropriate. 
+</span></span></code></pre></div><p>Rerunning the same prompt <code>cursor-agent -p &quot;write tests&quot;</code> makes the agent execute the mutation tests and iterate until all mutants are caught:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>$ cargo mutants
+</span></span><span style="display:flex;"><span>Found <span style="color:#ae81ff">54</span> mutants to test
+</span></span><span style="display:flex;"><span>ok       Unmutated baseline in 0s build + 0s test
+</span></span><span style="display:flex;"><span> INFO Auto-set test timeout to 20s
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">54</span> mutants tested in 9s: <span style="color:#ae81ff">54</span> caught
+</span></span></code></pre></div><p>It also added a skip annotation as instructed</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-diff" data-lang="diff"><span style="display:flex;"><span>diff --git a/rust/src/main.rs b/rust/src/main.rs                                                                                       
 </span></span><span style="display:flex;"><span>index 3a552a8..88b1371 100644                                                                                                          
 </span></span><span style="display:flex;"><span><span style="color:#f92672">--- a/rust/src/main.rs                                                                                                                 
-</span></span></span><span style="display:flex;"><span><span style="color:#f92672"></span><span style="color:#a6e22e">+++ b/rust/src/main.rs                                                                                                                 
-</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span><span style="color:#75715e">@@ -2,6 +2,7 @@ mod gildedrose;                                                                                                        
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e">+++ b/rust/src/main.rs                                                                                                                 
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">@@ -2,6 +2,7 @@ mod gildedrose;                                                                                                        
+</span></span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span> use gildedrose::{GildedRose, Item};
 </span></span><span style="display:flex;"><span> 
 </span></span><span style="display:flex;"><span><span style="color:#a6e22e">+#[mutants::skip]                                                                                                                      
-</span></span></span><span style="display:flex;"><span><span style="color:#a6e22e"></span> fn main() {
+</span></span></span><span style="display:flex;"><span> fn main() {
 </span></span><span style="display:flex;"><span>     let items = vec![
 </span></span><span style="display:flex;"><span>         Item::new(&#34;+5 Dexterity Vest&#34;, 10, 20),
-</span></span></code></pre></div><h2 id="takeaways">Takeaways</h2>
+</span></span></code></pre></div><h2 id="takeaways">
+  <a class="heading-anchor" href="#takeaways">
+    Takeaways
+  </a>
+</h2>
 <div class="aside">
 <ul>
 <li><strong>LLM-assisted development</strong> improves <strong>mutation testing</strong>:
@@ -532,38 +353,18 @@ ok       Unmutated baseline in 0s build + 0s test
 
 <p>Let&rsquo;s see if it provides value in practice. I will start using this loop as part of my normal development flow, and hopefully find out.</p>
 
-  
   <hr>
 <div class="footer">
+	
+        <a class="previous-post" href="/posts/llm-discussion/?ref=footer"><span style="font-weight:bold;">« Previous</span><br>How LLM discussions sound to me (in 2025-06-xx)</a>
     
-	    
-            <a class="previous-post" href="/posts/llm-discussion/?ref=footer"><span style="font-weight:bold;">« Previous</span><br>How LLM discussions sound to me (in 2025-06-xx)</a>
-        
-	    
-    
-</div>
-
-  
-</div>
-            </main>
-            
-  
-    <div class="article-toc ">
-    <div class="toc-wrapper">
-      <h4 id="contents"></h4>
-      <nav id="TableOfContents">
-  <ul>
-    <li><a href="#mutation-testing">Mutation testing</a></li>
-    <li><a href="#the-semi-automated-way">The semi-automated way</a></li>
-    <li><a href="#fully-automated">Fully automated?</a></li>
-    <li><a href="#takeaways">Takeaways</a></li>
-  </ul>
-</nav>
-    </div>
+	
+    <br/>
 </div>
 
   
 
-        </div>
-    </body>
+
+  </main>
+</body>
 </html>
