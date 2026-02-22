@@ -6,8 +6,15 @@
     <description>Recent content on Gustav Larsson</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 24 Jan 2026 12:00:00 +0300</lastBuildDate>
+    <lastBuildDate>Sun, 22 Feb 2026 00:00:00 +0200</lastBuildDate>
     <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>How I sandbox LLMs during development</title>
+      <link>/posts/how-i-sandbox-llms/</link>
+      <pubDate>Sun, 22 Feb 2026 00:00:00 +0200</pubDate>
+      <guid>/posts/how-i-sandbox-llms/</guid>
+      <description>&lt;p&gt;I have some opinions:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Context switching is expensive&lt;/li&gt;&#xA;&lt;li&gt;Human time use should be optimized&lt;/li&gt;&#xA;&lt;li&gt;Wasting human time on broken LLM output should be avoided&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;Therefore, asking for permission to run commands and trying to maintain a list of allowed commands is both wasteful and probably unsafe.&#xA;I prefer sandboxing and allowing full freedom for the LLM agent.&lt;/p&gt;&#xA;&lt;p&gt;(While I could rely on the sandbox mechanism of the LLM agent program itself, I would rather have the control myself)&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Using mutation testing to improve trust in LLM-assisted development</title>
       <link>/posts/mutation-testing-llm-development/</link>
